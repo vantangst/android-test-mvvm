@@ -4,8 +4,10 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Patterns
 import android.view.LayoutInflater
 import test.com.androidtestmvvm.R
+
 
 class CommonUtils {
     fun showLoadingDialog(context: Context) : Dialog {
@@ -17,5 +19,9 @@ class CommonUtils {
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
         return dialog
+    }
+
+    fun isEmailValid(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 }

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -23,6 +24,15 @@ android {
         }
     }
 
+    dataBinding {
+        enabled = true
+    }
+
+}
+
+ext {
+    lifecycleVersion = '2.2.0'
+    retrofitVersion = '2.6.1'
 }
 
 dependencies {
@@ -36,11 +46,21 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     //logging
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
+
+    // view model
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
+
+    implementation "com.google.android.material:material:1.1.0"
+    kapt "com.android.databinding:compiler:$compiler_version"
+}
+kapt {
+    generateStubs = true
 }

@@ -19,7 +19,7 @@ interface DemoServices {
     fun login(@Field("email")email : String, @Field("password")password : String): Observable<LoginResponse>
 
     companion object {
-        fun create(context: Context): DemoServices {
+        fun create(): DemoServices {
             val client = OkHttpClient.Builder()
             if (BuildConfig.DEBUG) {
                 val interceptor = HttpLoggingInterceptor()
