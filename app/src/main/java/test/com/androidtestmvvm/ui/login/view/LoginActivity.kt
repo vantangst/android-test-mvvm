@@ -71,7 +71,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(), Logi
 
     override fun openMainActivity(bundle: Bundle) {
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtras(bundle)
+        intent.putExtra("user", bundle)
         startActivity(intent)
         finish()
     }
