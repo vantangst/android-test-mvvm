@@ -1,7 +1,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.login.view.LoginActivity">
+    tools:context=".ui.login.LoginActivity">
 
     <data>
 
@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="test.com.androidtestmvvm.ui.login.view.LoginViewModel" />
+            type="test.com.androidtestmvvm.ui.login.LoginViewModel" />
 
     </data>
 
