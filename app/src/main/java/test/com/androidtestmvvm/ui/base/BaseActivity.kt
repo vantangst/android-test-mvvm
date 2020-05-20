@@ -31,6 +31,7 @@ abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel<*>> : AppComp
     fun showLoading() {
         hideLoading()
         progressDialog = CommonUtils().showLoadingDialog(this)
+        progressDialog?.show()
     }
 
     /**

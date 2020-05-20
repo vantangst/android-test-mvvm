@@ -1,6 +1,6 @@
 package test.com.androidtestmvvm.ui.login.view
 
-import android.content.Context
+import android.os.Bundle
 import android.text.TextUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -24,27 +24,25 @@ class LoginViewModel : BaseViewModel<LoginNavigator>(){
     }
 
     fun login(email: String, password: String) {
+        getNavigator()?.showLoading(true)
         getCompositeDisposable()?.add(DemoServices.create().login(email, password)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { response ->
-                    if (response != null ) {
-                        if(response.result) {
-                            //success
-                        } else {
-                            //error
-                        }
+                    getNavigator()?.showLoading(false)
+                    if(response.result) {
+                        val bundle = Bundle()
+                        bundle.putString("user_name", response.data.name)
+                        getNavigator()?.openMainActivity(bundle)
+                    } else {
+                        getNavigator()?.showFailedMessage(response.message)
                     }
-                    else {
-                        //error
-                    }
-                    //hideDialogProgress()
                 },
 
                 { error ->
-                    //hideDialogProgress()
-                    //show error
+                    getNavigator()?.showLoading(false)
+                    getNavigator()?.handleError(error)
                 }
             ))
     }
