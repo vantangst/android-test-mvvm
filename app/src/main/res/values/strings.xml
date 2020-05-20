@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">AndroidTestMVVM</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="hello">Hello</string>
+
+    <string name="error_something_went_wrong">Sorry! Something went wrong</string>
+    <string name="error_email_and_password_login">Incorrect Email or Password</string>
+    <string name="error_no_connect_connection">Unable to access internet. Please ensure you have a valid internet connection and try again.</string>
 </resources>
