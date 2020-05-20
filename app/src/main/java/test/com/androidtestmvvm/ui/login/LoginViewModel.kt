@@ -1,4 +1,4 @@
-package test.com.androidtestmvvm.ui.login.view
+package test.com.androidtestmvvm.ui.login
 
 import android.os.Bundle
 import android.text.TextUtils
@@ -6,11 +6,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import test.com.androidtestmvvm.data.network.DemoServices
 import test.com.androidtestmvvm.ui.base.BaseViewModel
+import test.com.androidtestmvvm.ui.login.LoginNavigator
 import test.com.androidtestmvvm.utils.CommonUtils
 
-class LoginViewModel : BaseViewModel<LoginNavigator>(){
+class LoginViewModel : BaseViewModel<LoginNavigator>() {
 
-    fun isSignInDataValid(email: String, password: String) : Boolean{
+    fun isSignInDataValid(email: String, password: String) : Boolean {
         if (TextUtils.isEmpty(email)) {
             return false
         }

@@ -1,7 +1,8 @@
-package test.com.androidtestmvvm.ui
+package test.com.androidtestmvvm.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
 import test.com.androidtestmvvm.R
 
 class MainActivity : AppCompatActivity() {
@@ -10,5 +11,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val bundle = intent.getBundleExtra("user")
+        bundle?.let {
+            tvHello.text = String.format("Hello %s", it.getString("user_name", "There"))
+        }
     }
 }

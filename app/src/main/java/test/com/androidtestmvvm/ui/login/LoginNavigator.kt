@@ -1,4 +1,4 @@
-package test.com.androidtestmvvm.ui.login.view
+package test.com.androidtestmvvm.ui.login
 
 import android.os.Bundle
 
