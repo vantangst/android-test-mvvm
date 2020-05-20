@@ -1,6 +1,5 @@
 package test.com.androidtestmvvm.data.network
 
-import android.content.Context
 import io.reactivex.Observable
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
