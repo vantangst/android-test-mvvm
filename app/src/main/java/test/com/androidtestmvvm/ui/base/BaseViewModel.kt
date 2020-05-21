@@ -1,16 +1,25 @@
 package test.com.androidtestmvvm.ui.base
 
+import android.os.Bundle
+import androidx.databinding.ObservableField
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.lang.ref.WeakReference
+import test.com.androidtestmvvm.utils.SingleLiveData
 
 
-abstract class BaseViewModel<N> : ViewModel() {
+abstract class BaseViewModel : ViewModel() {
     private var compositeDisposable: CompositeDisposable? = null
-    private var navigator: WeakReference<N>? = null
+    var isLoadingDialog: ObservableField<Boolean>? = null
+    var toastMessage: MutableLiveData<Any>? = null
+    val uiEventLiveData = SingleLiveData<Pair<Bundle, Int>>()
+    var isNetworkConnected = false
+
 
     init {
         compositeDisposable = CompositeDisposable()
+        isLoadingDialog = ObservableField(false)
+        toastMessage = MutableLiveData<Any>()
     }
 
     override fun onCleared() {
@@ -20,13 +29,5 @@ abstract class BaseViewModel<N> : ViewModel() {
 
     fun getCompositeDisposable(): CompositeDisposable? {
         return compositeDisposable
-    }
-
-    open fun getNavigator(): N? {
-        return navigator?.get()
-    }
-
-    open fun setNavigator(navigator: N) {
-        this.navigator = WeakReference(navigator)
     }
 }
