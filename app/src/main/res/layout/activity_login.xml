@@ -53,6 +53,7 @@
                     android:cursorVisible="true"
                     android:gravity="center|left|bottom"
                     android:hint="@string/email"
+                    android:text="@={viewModel.email}"
                     android:inputType="textEmailAddress"
                     android:maxLength="50"
                     android:imeOptions="actionNext"
@@ -77,6 +78,7 @@
                     android:gravity="center|left|bottom"
                     android:inputType="textPassword"
                     android:maxLength="50"
+                    android:text="@={viewModel.password}"
                     android:imeOptions="actionDone"
                     android:paddingBottom="10dp"
                     style="@style/TextStyle.Normal"/>

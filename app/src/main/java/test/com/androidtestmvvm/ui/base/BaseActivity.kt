@@ -1,5 +1,6 @@
 package test.com.androidtestmvvm.ui.base
 
+import test.com.androidtestmvvm.utils.ConnectionLiveData
 import android.app.Dialog
 import android.os.Bundle
 import androidx.annotation.LayoutRes
@@ -7,14 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.annotation.Nullable
+import androidx.lifecycle.Observer
 import test.com.androidtestmvvm.utils.CommonUtils
-import test.com.androidtestmvvm.utils.NetworkUtils
 
 
-abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel<*>> : AppCompatActivity() {
+abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel> : AppCompatActivity() {
     private var progressDialog: Dialog? = null
     private lateinit var viewDataBinding: T
     private var viewModel: V? = null
+    private var connectionLiveData: ConnectionLiveData? = null
 
     fun hideLoading() {
         progressDialog?.let {
@@ -22,10 +24,6 @@ abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel<*>> : AppComp
                 it.cancel()
             }
         }
-    }
-
-    fun isNetworkConnected(): Boolean {
-        return NetworkUtils().isNetworkConnected(applicationContext)
     }
 
     fun showLoading() {
@@ -57,6 +55,14 @@ abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel<*>> : AppComp
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         performDataBinding()
+        observeNetwork()
+    }
+
+    private fun observeNetwork() {
+        connectionLiveData = ConnectionLiveData(this)
+        connectionLiveData?.observe(this, Observer {
+            viewModel?.isNetworkConnected = it
+        })
     }
 
     open fun getViewDataBinding(): T {

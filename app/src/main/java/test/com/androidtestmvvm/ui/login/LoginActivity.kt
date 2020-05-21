@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.databinding.Observable
+import androidx.databinding.ObservableField
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import test.com.androidtestmvvm.BR
 import test.com.androidtestmvvm.ui.main.MainActivity
@@ -12,7 +15,7 @@ import test.com.androidtestmvvm.databinding.ActivityLoginBinding
 import test.com.androidtestmvvm.ui.base.BaseActivity
 
 
-class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(), LoginNavigator {
+class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var activityLoginBinding: ActivityLoginBinding
@@ -20,7 +23,51 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(), Logi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityLoginBinding = getViewDataBinding()
-        loginViewModel.setNavigator(this)
+        setUpObserve()
+    }
+
+    private fun setUpObserve() {
+        val isLoadingCallback = object : Observable.OnPropertyChangedCallback() {
+            override fun onPropertyChanged(observable: Observable, i: Int) {
+                val status: Boolean? = (observable as ObservableField<Boolean>).get()
+                if (status != null && status) {
+                    showLoading()
+                } else {
+                    hideLoading()
+                }
+            }
+        }
+        loginViewModel.isLoadingDialog?.addOnPropertyChangedCallback(isLoadingCallback)
+
+        loginViewModel.toastMessage?.observe(this, Observer { msg ->
+            when (msg) {
+                is String -> {
+                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+                }
+                is Int -> {
+                    Toast.makeText(this, getString(msg), Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+
+        loginViewModel.uiEventLiveData.observe(this, Observer {
+            when (it?.second) {
+                1 -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.putExtra("user", it.first)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+
+        })
+
+        loginViewModel.errorData?.observe(this, Observer { error ->
+            Log.e(javaClass.simpleName, "handleError() - ${error?.message}")
+            Toast.makeText(this,
+                if (error == null) getString(R.string.error_something_went_wrong) else error.localizedMessage,
+                Toast.LENGTH_SHORT).show()
+        })
     }
 
     override fun getBindingVariable(): Int {
@@ -34,45 +81,5 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(), Logi
     override fun getViewModel(): LoginViewModel {
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
         return this.loginViewModel
-    }
-
-    override fun showFailedMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun handleError(throwable: Throwable?) {
-        Log.e(javaClass.simpleName, "handleError() - ${throwable?.message}")
-        Toast.makeText(this,
-            if (throwable == null) getString(R.string.error_something_went_wrong) else throwable.localizedMessage,
-            Toast.LENGTH_SHORT).show()
-    }
-
-    override fun showLoading(isShow: Boolean) {
-        if (isShow) {
-            showLoading()
-        } else {
-            hideLoading()
-        }
-    }
-
-    override fun login() {
-        val email: String = activityLoginBinding.etEmail.text.toString()
-        val password: String = activityLoginBinding.etPassword.text.toString()
-        if (loginViewModel.isSignInDataValid(email, password)) {
-            if (isNetworkConnected()) {
-                loginViewModel.login(email, password)
-            } else {
-                Toast.makeText(this, getString(R.string.error_no_connect_connection), Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Toast.makeText(this, getString(R.string.error_email_and_password_login), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun openMainActivity(bundle: Bundle) {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("user", bundle)
-        startActivity(intent)
-        finish()
     }
 }
